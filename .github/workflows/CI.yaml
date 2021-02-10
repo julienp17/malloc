@@ -51,7 +51,6 @@ jobs:
     container: epitechcontent/epitest-docker
     env:
       LIB_NAME: libmy_malloc.so
-      LD_LIBRARY_PATH: $PWD
 
     steps:
     - name: Checkout repository
@@ -59,6 +58,9 @@ jobs:
 
     - name: Build binary
       run: make
+
+    - name: Export library path
+      run: export LD_LIBRARY_PATH=$(PWD)
 
     - name: Run ls
       run: LD_PRELOAD=$LIB_NAME ls
