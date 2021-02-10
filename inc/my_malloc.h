@@ -9,11 +9,21 @@
 #define MY_MALLOC_H_
 
 #include <stddef.h>
+#include <stdbool.h>
 
-void *malloc(size_t  size);
+typedef struct mem_block
+{
+    bool is_freed;
+    size_t length;
+    struct mem_block *next;
+} mem_block_t;
+
+void *malloc(size_t size);
 void free(void *ptr);
-void *calloc(size_t  nmemb , size_t  size);
-void *realloc(void *ptr , size_t  size);
-void *reallocarray(void *ptr , size_t  nmemb , size_t  size);
+void *calloc(size_t nmemb, size_t size);
+void *realloc(void *ptr, size_t size);
+void *reallocarray(void *ptr, size_t nmemb, size_t size);
+
+size_t get_block_size(const size_t requested);
 
 #endif
