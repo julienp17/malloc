@@ -5,4 +5,4 @@ bootstrap/*
 *a.out*
 *.gc*
 *unit_tests*
-libmymalloc.so
+libmy_malloc.so
