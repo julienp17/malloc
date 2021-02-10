@@ -1,5 +1,6 @@
 .vscode/*
 bootstrap/*
+*main*
 *.o
 *a.out*
 *.gc*
