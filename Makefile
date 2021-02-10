@@ -7,8 +7,6 @@
 
 CC			=	gcc
 
-MAIN		=	$(addprefix $(SRC_D), main.c)
-
 SRC			=	$(addprefix $(SRC_D), $(SRC_F))
 OBJ			=	$(SRC:.cpp=.o)
 SRC_D		=	src/
@@ -27,7 +25,7 @@ LDFLAGS_UT  =	-lcriterion --coverage
 
 DBFLAGS		=	-g -g3 -ggdb
 
-LIB			=	libmymalloc.so
+LIB			=	libmy_malloc.so
 
 BIN_UT		=	unit_tests
 
@@ -35,7 +33,7 @@ all: $(LIB)
 
 .PHONY: all
 $(LIB):
-	$(CC) -o $(LIB) $(MAIN) $(SRC) $(CFLAGS)
+	$(CC) -o $(LIB) $(SRC) $(CFLAGS)
 
 .PHONY: perfect
 perfect:

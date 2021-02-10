@@ -5,7 +5,9 @@
 ** main
 */
 
-int main(void)
+#include <unistd.h>
+
+void *malloc(size_t size)
 {
-    return 0;
+    
 }
