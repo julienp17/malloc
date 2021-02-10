@@ -46,10 +46,12 @@ jobs:
       run: make coverage
 
   functional-test:
-    continue-on-error: true # FALSE BY DEFAULT, REMOVE IF THERE ARE FUNCTIONAL TESTS
     name: Functional tests
     runs-on: ubuntu-20.04
     container: epitechcontent/epitest-docker
+    env:
+      LIB_NAME: libmy_malloc.so
+      LD_LIBRARY_PATH: $PWD
 
     steps:
     - name: Checkout repository
@@ -58,5 +60,8 @@ jobs:
     - name: Build binary
       run: make
 
-    - name: Run functional test
-      run: ./functional-test.sh
+    - name: Run ls
+      run: LD_PRELOAD=$LIB_NAME ls
+
+    - name: Run cat
+      run: LD_PRELOAD=$LIB_NAME cat
