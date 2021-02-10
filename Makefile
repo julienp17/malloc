@@ -8,18 +8,18 @@
 CC			=	gcc
 
 SRC			=	$(addprefix $(SRC_D), $(SRC_F))
-OBJ			=	$(SRC:.cpp=.o)
+OBJ			=	$(SRC:.c=.o)
 SRC_D		=	src/
-SRC_F		=
+SRC_F		=	malloc.c
 
 SRC_UT		=	$(addprefix $(SRC_UT_D), $(SRC_UT_F))
-OBJ_UT		=	$(SRC_UT:.cpp=.o)
+OBJ_UT		=	$(SRC_UT:.c=.o)
 SRC_UT_D	=	tests/
 SRC_UT_F	=
 
 INC			=	-I./inc
 
-CFLAGS		=	-W -Wall -Wextra -Werror $(INC)
+CFLAGS		=	-W -Wall -Wextra -Werror -fpic $(INC)
 
 LDFLAGS_UT  =	-lcriterion --coverage
 
@@ -32,8 +32,8 @@ BIN_UT		=	unit_tests
 all: $(LIB)
 
 .PHONY: all
-$(LIB):
-	$(CC) -o $(LIB) $(SRC) $(CFLAGS)
+$(LIB): $(SRC:.c=.o)
+	$(CC) -shared -o $(LIB) $(SRC) $(CFLAGS)
 
 .PHONY: perfect
 perfect:
