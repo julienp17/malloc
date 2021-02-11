@@ -65,11 +65,10 @@ static bool can_add_free_block(const mem_block_t *block, const size_t size)
 
 static void add_free_block(mem_block_t *block, const size_t size)
 {
-    void *free_block = (void *)block + sizeof(mem_block_t) + size;
+    mem_block_t *free_block = (void *)block + sizeof(mem_block_t) + size;
 
-    ((mem_block_t *)free_block)->is_free = true;
-    ((mem_block_t *)free_block)->len =
-        block->len - sizeof(mem_block_t) * 2 - size;
-    ((mem_block_t *)free_block)->next = block->next;
+    free_block->is_free = true;
+    free_block->len = block->len - sizeof(mem_block_t) * 2 - size;
+    free_block->next = block->next;
     block->next = free_block;
 }
