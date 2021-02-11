@@ -9,37 +9,47 @@
 #include <unistd.h>
 #include "my_malloc.h"
 
-static mem_block_t *mem_block_wrapper(mem_block_t *new_mem_block);
+static mem_block_t *first_malloc(size_t size);
+static bool block_is_available(const mem_block_t *block, const size_t request);
 
 void *malloc(size_t size)
 {
-    mem_block_t *head = mem_block_wrapper(NULL);
+    mem_block_t *block = mem_block_wrapper(NULL);
 
     if (size == 0)
         return NULL;
-    if (head == NULL) {
-        head = (mem_block_t *)sbrk(get_block_size(size));
-    }
+    if (block == NULL)
+        return first_malloc(size);
+    while (!block_is_available(block, size))
+        block = block->next;
+    //TODO: block not available
+
+
+    return block + sizeof(mem_block_t);
+}
+
+static mem_block_t *first_malloc(size_t size)
+{
+    mem_block_t *head = NULL;
+    size_t heap_size = 0;
+
+    heap_size = get_heap_size(size);
+    head = (mem_block_t *)sbrk(heap_size);
+    head->len = size;
+    head->is_freed = false;
+    head->next = head + (sizeof(mem_block_t) + head->len);
+    head->next->len = heap_size - head->len - sizeof(mem_block_t) * 2;
+    head->next->is_freed = true;
+    head->next->next = NULL;
+    mem_block_wrapper(head);
     return head;
 }
 
-size_t get_block_size(const size_t requested)
+static bool block_is_available(const mem_block_t *block, const size_t request)
 {
-    int page_size = getpagesize();
-    size_t used = sizeof(mem_block_t) + requested;
-
-    if (requested == 0)
-        return 0;
-    else if (used / page_size == 0)
-        return 2 * page_size;
-    return 2 * page_size * ((used - 1) / page_size);
-}
-
-static mem_block_t *mem_block_wrapper(mem_block_t *new_mem_block)
-{
-    static mem_block_t *mem_block = NULL;
-
-    if (new_mem_block)
-        mem_block = new_mem_block;
-    return mem_block;
+    return (
+        block != NULL
+        && block->is_freed == true
+        && block->len <= request
+    );
 }

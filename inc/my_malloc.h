@@ -14,7 +14,7 @@
 typedef struct mem_block
 {
     bool is_freed;
-    size_t length;
+    size_t len;
     struct mem_block *next;
 } mem_block_t;
 
@@ -24,6 +24,7 @@ void *calloc(size_t nmemb, size_t size);
 void *realloc(void *ptr, size_t size);
 void *reallocarray(void *ptr, size_t nmemb, size_t size);
 
-size_t get_block_size(const size_t requested);
+size_t get_heap_size(const size_t requested);
+mem_block_t *mem_block_wrapper(mem_block_t *new_mem_block);
 
 #endif
