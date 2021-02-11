@@ -5,12 +5,13 @@
 ** main
 */
 
-#include <stdio.h>
 #include <unistd.h>
 #include "my_malloc.h"
 
 static mem_block_t *first_malloc(size_t size);
 static bool block_is_available(const mem_block_t *block, const size_t request);
+static bool can_add_free_block(const mem_block_t *block, const size_t size);
+static void add_free_block(mem_block_t *block, const size_t size);
 
 void *malloc(size_t size)
 {
@@ -23,8 +24,14 @@ void *malloc(size_t size)
     while (!block_is_available(block, size))
         block = block->next;
     //TODO: block not available
-
-
+    if (block) {
+        block->is_free = false;
+        if (can_add_free_block(block, size))
+            add_free_block(block, size);
+        block->len = size;
+    } else {
+        return NULL;
+    }
     return block + sizeof(mem_block_t);
 }
 
@@ -35,21 +42,34 @@ static mem_block_t *first_malloc(size_t size)
 
     heap_size = get_heap_size(size);
     head = (mem_block_t *)sbrk(heap_size);
-    head->len = size;
-    head->is_freed = false;
-    head->next = head + (sizeof(mem_block_t) + head->len);
-    head->next->len = heap_size - head->len - sizeof(mem_block_t) * 2;
-    head->next->is_freed = true;
-    head->next->next = NULL;
-    mem_block_wrapper(head);
-    return head;
+    head->is_free = false;
+    head->len = heap_size;
+    head->next = NULL;
+    add_free_block(head, size);
+    return mem_block_wrapper(head);;
 }
 
-static bool block_is_available(const mem_block_t *block, const size_t request)
+static bool block_is_available(const mem_block_t *block, const size_t size)
 {
     return (
         block != NULL
-        && block->is_freed == true
-        && block->len <= request
+        && block->is_free == true
+        && block->len <= size
     );
+}
+
+static bool can_add_free_block(const mem_block_t *block, const size_t size)
+{
+    return block->len - size > sizeof(mem_block_t) + 1;
+}
+
+static void add_free_block(mem_block_t *block, const size_t size)
+{
+    void *free_block = (void *)block + sizeof(mem_block_t) + size;
+
+    ((mem_block_t *)free_block)->is_free = true;
+    ((mem_block_t *)free_block)->len =
+        block->len - sizeof(mem_block_t) * 2 - size;
+    ((mem_block_t *)free_block)->next = block->next;
+    block->next = free_block;
 }
