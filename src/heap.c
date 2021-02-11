@@ -5,6 +5,7 @@
 ** heap
 */
 
+#include <unistd.h>
 #include "my_malloc.h"
 
 void grow_heap();
