@@ -29,28 +29,13 @@ jobs:
     - run: make fclean
     - run: make re
 
-  unit-test:
-    name: Unit tests
-    runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Run unit tests
-      run: make tests_run
-
-    - name: Run coverage
-      if: ${{ always() }}
-      run: make coverage
-
   functional-test:
     name: Functional tests
     runs-on: ubuntu-20.04
     container: epitechcontent/epitest-docker
     env:
       LIB_NAME: libmy_malloc.so
+      LD_LIBRARY_PATH: .
 
     steps:
     - name: Checkout repository
@@ -58,9 +43,6 @@ jobs:
 
     - name: Build binary
       run: make
-
-    - name: Export library path
-      run: export LD_LIBRARY_PATH=$(PWD)
 
     - name: Run ls
       run: LD_PRELOAD=$LIB_NAME ls
