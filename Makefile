@@ -10,14 +10,17 @@ CC			=	gcc
 SRC			=	$(addprefix $(SRC_D), $(SRC_F))
 OBJ			=	$(SRC:.c=.o)
 SRC_D		=	src/
-SRC_F		=	malloc/malloc.c \
+SRC_F		=	heap/heap.c \
+				heap/mem_block_wrapper.c \
+				malloc/malloc.c \
 				malloc/first_malloc.c \
 				malloc/add_block.c \
 				malloc/bestfit.c \
-				heap/heap.c \
 				free/free.c \
 				free/defragment.c \
-				mem_block_wrapper.c \
+				calloc/calloc.c \
+				realloc/realloc.c \
+				realloc/reallocarray.c
 
 SRC_UT		=	$(addprefix $(SRC_UT_D), $(SRC_UT_F))
 OBJ_UT		=	$(SRC_UT:.c=.o)

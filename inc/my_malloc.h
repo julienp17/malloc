@@ -43,7 +43,10 @@ bool can_defragment(const mem_block_t *block);
 void defragment_block(mem_block_t *block);
 
 void *calloc(size_t nmemb, size_t size);
+
 void *realloc(void *ptr, size_t size);
+bool can_realloc(const mem_block_t *block, const size_t new_size);
+
 void *reallocarray(void *ptr, size_t nmemb, size_t size);
 
 #endif

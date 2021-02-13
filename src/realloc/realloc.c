@@ -23,10 +23,11 @@ void *realloc(void *ptr, size_t size)
     }
     block = ptr - sizeof(mem_block_t);
     if (block->len == size)
-        return;
+        return ptr;
     if (can_realloc(block, size)) {
         memcpy(ptr + size, (void *)block->next, sizeof(mem_block_t));
         block->len = size;
+        return ptr;
     } else {
         free(ptr);
         return malloc(size);
