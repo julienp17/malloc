@@ -15,7 +15,8 @@ SRC_F		=	malloc/malloc.c \
 				malloc/add_block.c \
 				malloc/bestfit.c \
 				heap/heap.c \
-				free.c \
+				free/free.c \
+				free/defragment.c \
 				mem_block_wrapper.c \
 
 SRC_UT		=	$(addprefix $(SRC_UT_D), $(SRC_UT_F))

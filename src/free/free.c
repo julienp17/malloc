@@ -9,8 +9,10 @@
 
 void free(void *ptr)
 {
-    mem_block_t *block = ptr - sizeof(mem_block_t);
+    mem_block_t *block = NULL;
 
+    if (ptr == NULL)
+        return;
+    block = ptr - sizeof(mem_block_t);
     block->is_free = true;
-    // TODO: remove two unfreed blocks following each other
 }
